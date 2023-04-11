@@ -51,7 +51,7 @@
   </div>
 </template>
 <script>
-import { defaultCfg } from "@/components/chartLineCfg";
+import { defaultCfg } from "@/components/chart-line/chartLineCfg";
 import axios from "axios";
 
 export default {

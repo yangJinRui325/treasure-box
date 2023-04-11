@@ -8,7 +8,31 @@ const routes = [
     path: "/",
     name: "Layout",
     component: () => import("../Layout.vue"),
+    redirect: "/home",
+    children: [
+      {
+        path: "home",
+        name: "Home",
+        meta: {
+          title: "玩转小demo",
+        },
+        component: () => import("@/views/Home.vue"),
+      },
+      {
+        path: "chart",
+        name: "Chart",
+        meta: {
+          title: "拖拽图表",
+        },
+        component: () => import("@/views/chart/Index.vue"),
+      },
+    ],
   },
+  // {
+  //   path: '/',
+  //   name: 'Layout',
+  //   component: () => import('../Layout.vue'),
+  // },
   // {
   //   path: "/about",
   //   name: "About",

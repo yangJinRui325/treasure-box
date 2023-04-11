@@ -1,27 +1,43 @@
 <template>
   <a-layout class="layout-wrapper">
     <a-layout-header class="layout-header">
-      <h2 class="title">图表拖拽示例</h2>
+      <h2 class="title">{{ title }}</h2>
+      <a-button
+        v-if="isBack"
+        type="primary"
+        class="back"
+        icon="rollback"
+        @click="handlerBack"
+      >
+        返回上级
+      </a-button>
     </a-layout-header>
     <a-layout-content class="layout-content">
-      <sider-left />
-      <Content />
+      <router-view></router-view>
     </a-layout-content>
   </a-layout>
 </template>
 <script>
-import SiderLeft from "@/views/SiderLeft.vue";
-import Content from "@/views/Content";
 export default {
   name: "Layout",
   props: {},
-  components: { SiderLeft, Content },
-  computed: {},
+  computed: {
+    title() {
+      return this.$route.meta.title || "合集";
+    },
+    isBack() {
+      return this.$route.name !== "Home";
+    },
+  },
   data() {
     return {};
   },
   mounted() {},
-  methods: {},
+  methods: {
+    handlerBack() {
+      this.$router.history.go(-1);
+    },
+  },
   watch: {},
 };
 </script>
@@ -31,14 +47,21 @@ export default {
   height: 100%;
   .layout-header {
     color: #fff;
+    position: relative;
     .title {
       margin: 0;
       color: #fff;
     }
+    .back {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 20px;
+      margin: auto;
+    }
   }
   .layout-content {
-    display: grid;
-    grid-template-columns: 340px auto;
+    background-color: #fff;
   }
 }
 </style>

@@ -2,7 +2,7 @@
   <div :id="randomId" :style="{ width, height }"></div>
 </template>
 <script>
-import { defaultCfg } from "./chartLineCfg";
+import { defaultCfg } from "../chart-line/chartLineCfg";
 export default {
   name: "ChartLine",
   props: {
