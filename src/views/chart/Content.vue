@@ -52,7 +52,7 @@
 </template>
 <script>
 import { defaultCfg } from "@/components/chart-line/chartLineCfg";
-import axios from "axios";
+// import axios from "axios";
 
 export default {
   name: "Content",
@@ -96,20 +96,20 @@ export default {
     },
     // 模拟数据请求
     handleData() {
-      axios.get("/getData").then((res) => {
+      this.$axios.get("/mock/getData").then((data) => {
         // 此处省略axios拦截相关
-        const { data: response } = res;
-        const { code, data } = response;
-        if (code === 200) {
-          let xAxis = [],
-            yAxis = [];
-          data.forEach(({ name, value }) => {
-            xAxis.push(name);
-            yAxis.push(value);
-          });
-          this.chartCfg.xAxis.data = xAxis;
-          this.chartCfg.series[0].data = yAxis;
-        }
+        // const { data: response } = res;
+        // const { code, data } = response;
+        // if (code === 200) {
+        let xAxis = [],
+          yAxis = [];
+        data.forEach(({ name, value }) => {
+          xAxis.push(name);
+          yAxis.push(value);
+        });
+        this.chartCfg.xAxis.data = xAxis;
+        this.chartCfg.series[0].data = yAxis;
+        // }
       });
     },
   },

@@ -26,6 +26,14 @@ const routes = [
         },
         component: () => import("@/views/chart/Index.vue"),
       },
+      {
+        path: "g6",
+        name: "Tree",
+        meta: {
+          title: "G6树",
+        },
+        component: () => import("@/views/g6/Index.vue"),
+      },
     ],
   },
   // {

@@ -32,7 +32,7 @@ export default {
           message: "自定义树形结构",
           img: "https://imgs1.zupu.cn/static/web/images/zupuking/hf-6.png",
           handler: () => {
-            this.$router.push("/chart");
+            this.$router.push("/g6");
           },
         },
         {
