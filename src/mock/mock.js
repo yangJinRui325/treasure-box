@@ -61,4 +61,8 @@ Mock.mock("/mock/getTreeBase", {
   },
 });
 
+// delete Mock._mocked["ws://localhost:3000/socket.io/"];
+// Mock.mock(/^(?!.*socket\.io).*$/, {}); // 排除包含 socket.io 的请求
+Mock.mock(/socket\.io/, {});
+
 export default Mock;

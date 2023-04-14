@@ -34,6 +34,14 @@ const routes = [
         },
         component: () => import("@/views/g6/Index.vue"),
       },
+      {
+        path: "chat",
+        name: "Chat",
+        meta: {
+          title: "聊天室",
+        },
+        component: () => import("@/views/chat/Index.vue"),
+      },
     ],
   },
   // {

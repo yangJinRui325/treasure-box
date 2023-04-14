@@ -8,7 +8,7 @@
         @click="feature.handler"
       >
         <div class="feature-item-left" :style="{ background: feature.color }">
-          <img :src="feature.img" alt="" />
+          <i class="iconfont" :class="feature.icon"></i>
         </div>
         <div class="feature-item-right">
           <p class="title">{{ feature.title }}</p>
@@ -30,7 +30,7 @@ export default {
           color: "#FAEDC9",
           title: "G6树形结构",
           message: "自定义树形结构",
-          img: "https://imgs1.zupu.cn/static/web/images/zupuking/hf-6.png",
+          icon: "trea-tree",
           handler: () => {
             this.$router.push("/g6");
           },
@@ -39,9 +39,18 @@ export default {
           color: "#BDEFFF",
           title: "chart拖拽",
           message: "拖拽图表，自行配置属性",
-          img: "https://imgs1.zupu.cn/static/web/images/zupuking/hf-1.png",
+          icon: "trea-chart",
           handler: () => {
             this.$router.push("/chart");
+          },
+        },
+        {
+          color: "#c8ffd8",
+          title: "聊天室",
+          message: "websocket 在线实时聊天",
+          icon: "trea-chat",
+          handler: () => {
+            this.$router.push("/chat");
           },
         },
       ],
@@ -56,6 +65,7 @@ export default {
 .home-wrapper {
   padding: 40px;
 }
+
 .feature-box {
   display: flex;
   flex-wrap: wrap-reverse;
@@ -73,6 +83,7 @@ export default {
     grid-template-columns: 60px auto;
     grid-column-gap: 14px;
     cursor: pointer;
+
     .feature-item-left {
       width: 60px;
       height: 60px;
@@ -80,22 +91,28 @@ export default {
       display: flex;
       align-items: center;
       justify-content: center;
-      img {
-        height: 30px;
+
+      .iconfont {
+        font-size: 25px;
+        font-weight: 600;
       }
     }
+
     .feature-item-right {
       height: 100%;
       overflow: hidden;
+
       p {
         margin: 0;
       }
+
       .title {
         font-size: 24px;
         font-family: SourceHanSansCN-Bold, SourceHanSansCN;
         font-weight: bold;
         color: #333333;
       }
+
       .message {
         margin-top: 12px;
         line-height: 29px;
