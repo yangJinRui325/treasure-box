@@ -90,7 +90,7 @@ export default {
       defaultEdge: {
         type: "polyline",
         style: {
-          stroke: "#1890ff",
+          stroke: "#003cab",
           // offset: 20,  // 拐弯处距离节点最小距离
           radius: 20, // 拐弯处的圆角弧度，若不设置则为直角
           lineWidth: 2,
@@ -260,7 +260,7 @@ export default {
         r: 8.5,
         symbol: cfg.collapsed ? G6.Marker.expand : G6.Marker.collapse,
         fill: "#fff",
-        stroke: "#1890ff",
+        stroke: "#003cab",
         lineWidth: 1,
       };
       if (depth === 0) {

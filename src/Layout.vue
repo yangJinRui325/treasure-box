@@ -1,8 +1,8 @@
 <template>
-  <a-layout class="layout-wrapper">
-    <a-layout-header class="layout-header">
+  <t-layout class="layout-wrapper">
+    <t-header class="layout-header">
       <h2 class="title">{{ title }}</h2>
-      <a-button
+      <!-- <a-button
         v-if="isBack"
         type="primary"
         class="back"
@@ -10,17 +10,26 @@
         @click="handlerBack"
       >
         返回上级
-      </a-button>
-    </a-layout-header>
-    <a-layout-content class="layout-content">
+      </a-button> -->
+      <t-button v-if="isBack" class="back" theme="primary" @click="handlerBack">
+        <rollback-icon slot="icon" />
+        <!-- <add-icon slot="icon" /> -->
+        返回上级
+      </t-button>
+    </t-header>
+    <t-content class="layout-content">
       <router-view></router-view>
-    </a-layout-content>
-  </a-layout>
+    </t-content>
+  </t-layout>
 </template>
 <script>
+import { RollbackIcon } from "tdesign-icons-vue";
 export default {
   name: "Layout",
   props: {},
+  components: {
+    RollbackIcon,
+  },
   computed: {
     title() {
       return this.$route.meta.title || "合集";
@@ -48,8 +57,11 @@ export default {
   .layout-header {
     color: #fff;
     position: relative;
+    background-color: #242424;
     .title {
       margin: 0;
+      height: 100%;
+      line-height: 56px;
       color: #fff;
     }
     .back {

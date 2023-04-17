@@ -13,6 +13,16 @@
         <div class="feature-item-right">
           <p class="title">{{ feature.title }}</p>
           <p class="message" v-html="feature.message"></p>
+          <p class="message">
+            <t-tag
+              v-for="(tag, index) in feature.skill"
+              :key="index"
+              :theme="['primary', 'success', 'warning', 'danger'][index]"
+              variant="light"
+            >
+              {{ tag }}
+            </t-tag>
+          </p>
         </div>
       </li>
     </ul>
@@ -30,6 +40,7 @@ export default {
           color: "#FAEDC9",
           title: "G6树形结构",
           message: "自定义树形结构",
+          skill: ["antv/G6", "自定义节点"],
           icon: "trea-tree",
           handler: () => {
             this.$router.push("/g6");
@@ -39,6 +50,7 @@ export default {
           color: "#BDEFFF",
           title: "chart拖拽",
           message: "拖拽图表，自行配置属性",
+          skill: ["echart", "draggable"],
           icon: "trea-chart",
           handler: () => {
             this.$router.push("/chart");
@@ -48,6 +60,7 @@ export default {
           color: "#c8ffd8",
           title: "聊天室",
           message: "websocket 在线实时聊天",
+          skill: ["node.js", "websocket"],
           icon: "trea-chat",
           handler: () => {
             this.$router.push("/chat");
@@ -63,20 +76,19 @@ export default {
 </script>
 <style lang="less" scoped>
 .home-wrapper {
-  padding: 40px;
+  padding: 20px;
 }
 
 .feature-box {
   display: flex;
-  flex-wrap: wrap-reverse;
+  flex-wrap: wrap;
 
   .feature-item {
     width: 380px;
-    height: 200px;
     border-radius: 16px;
     border: 1px solid #dcdcdc;
     padding: 34px;
-    margin-right: 40px;
+    margin: 20px;
     text-align: justify;
     overflow: hidden;
     display: grid;
@@ -120,6 +132,9 @@ export default {
         font-family: PingFangSC-Regular, PingFang SC;
         font-weight: 400;
         color: #333333;
+        span {
+          margin-right: 6px;
+        }
       }
     }
 

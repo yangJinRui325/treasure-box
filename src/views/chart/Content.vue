@@ -13,38 +13,30 @@
 
     <div class="drawer" :class="{ collapse: collapse }">
       <div class="hadler" @click="collapse = !collapse">
-        <a-icon :type="collapse ? 'double-left' : 'double-right'" />
+        <t-icon
+          :name="collapse ? 'chevron-left-double' : 'chevron-right-double'"
+        />
       </div>
       <div class="drawer-inner">
         <h2>属性配置</h2>
-        <a-form id="propertyCfg" :form="form" v-bind="formItemLayout">
-          <a-form-item label="折线颜色">
-            <input
-              type="color"
+        <t-form :labelWidth="100">
+          <t-form-item name="name" label="折线颜色">
+            <t-color-picker
               @change="changeLineColor"
-              v-decorator="['lineColor']"
+              v-model="formData.lineColor"
             />
-          </a-form-item>
-          <a-form-item label="折线类型">
-            <a-select
-              default-value="solid"
-              v-decorator="[
-                'lineType',
-                {
-                  getValueFromEvent: (e) => e.target.value.toUpperCase(),
-                },
-              ]"
-              placeholder="请选择折线类型"
-              @change="changeLineType"
-            >
-              <a-select-option value="solid"> 实线 </a-select-option>
-              <a-select-option value="dashed"> 虚线 </a-select-option>
-              <a-select-option value="dotted"> 点 </a-select-option>
-            </a-select>
-          </a-form-item>
-        </a-form>
-        <p style="text-align: center">
-          <a-button type="primary" @click="handleData"> 变更数据 </a-button>
+          </t-form-item>
+          <t-form-item label="折线类型" name="password">
+            <t-select v-model="formData.lineType" @change="changeLineType">
+              <t-option key="solid" label="实线" value="solid" />
+              <t-option key="dashed" value="dashed">虚线</t-option>
+              <t-option key="dotted" label="点" value="dotted" />
+            </t-select>
+          </t-form-item>
+        </t-form>
+
+        <p style="text-align: center; margin: 14px">
+          <t-button theme="primary" @click="handleData"> 变更数据 </t-button>
         </p>
       </div>
     </div>
@@ -52,7 +44,6 @@
 </template>
 <script>
 import { defaultCfg } from "@/components/chart-line/chartLineCfg";
-// import axios from "axios";
 
 export default {
   name: "Content",
@@ -71,10 +62,11 @@ export default {
         labelCol: { span: 6 },
         wrapperCol: { span: 14 },
       },
+      formData: {
+        lineColor: "#000000",
+        lineType: "solid",
+      },
     };
-  },
-  beforeCreate() {
-    this.form = this.$form.createForm(this, { name: "property" });
   },
   mounted() {},
   methods: {
@@ -86,9 +78,9 @@ export default {
     onResize() {
       this.$refs?.chart?.resizeChart();
     },
-    changeLineColor(e) {
+    changeLineColor(value) {
       // 此处配置覆盖方式和echart官方保持一致
-      this.chartCfg.series[0].lineStyle.color = e.target.value;
+      this.chartCfg.series[0].lineStyle.color = value;
     },
     changeLineType(type) {
       // 此处配置覆盖方式和echart官方保持一致
@@ -97,10 +89,6 @@ export default {
     // 模拟数据请求
     handleData() {
       this.$axios.get("/mock/getData").then((data) => {
-        // 此处省略axios拦截相关
-        // const { data: response } = res;
-        // const { code, data } = response;
-        // if (code === 200) {
         let xAxis = [],
           yAxis = [];
         data.forEach(({ name, value }) => {
@@ -109,7 +97,6 @@ export default {
         });
         this.chartCfg.xAxis.data = xAxis;
         this.chartCfg.series[0].data = yAxis;
-        // }
       });
     },
   },
@@ -153,11 +140,15 @@ export default {
       text-align: center;
       background-color: rgba(0, 0, 0, 0.4);
       color: #fff;
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .drawer-inner {
+      padding-right: 10px;
       color: #fff;
       box-shadow: -6px 0 10px rgba(0, 0, 0, 0.1);
-      // background-color: rgba(0, 0, 0, 0.7);
       h2 {
         line-height: 40px;
       }

@@ -103,7 +103,7 @@ export default {
 .root-node {
   cursor: pointer;
   margin-right: 20px;
-  background-color: #1890ff;
+  background-color: #003cab;
   border-radius: 4px;
   width: 130px;
   height: 60px;

@@ -20,7 +20,12 @@
                   <span class="m-nickname">{{ item.nickname }}</span>
                   {{ item.date }}
                 </p>
-                <p class="message-box">{{ item.msg }}</p>
+                <p class="message-box">
+                  <t-avatar :class="item.uid === uid ? 'right' : 'left'">
+                    {{ item.nickname.substr(-1, 1) }}
+                  </t-avatar>
+                  <span class="bubble" v-html="item.msg"></span>
+                </p>
               </template>
             </li>
           </ul>
@@ -139,7 +144,6 @@ export default {
       console.log(ws);
       ws.onopen = function () {
         console.log("连接服务器成功");
-
         // 没有当前人信息的话，需要缓存下
         if (!that.uid) {
           that.uid = "web_im_" + moment().valueOf();
@@ -153,6 +157,7 @@ export default {
         }
         that.sendMessage(1);
       };
+      // 监听来自于服务端的消息
       ws.onmessage = function (e) {
         that.messageList.push(JSON.parse(e.data));
       };
@@ -161,13 +166,6 @@ export default {
       };
     },
   },
-
-  // sendMsg() {
-  //   const dom = document.getElementsByClassName("chat-message")[0];
-  //   const msg = dom.innerHTML;
-  //   this.$socket.emit("chat message", msg);
-  //   dom.innerHTML = "";
-  // },
 };
 </script>
 <style scoped lang="less">
@@ -177,11 +175,13 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #f8f8f8;
+  background: url("../../assets/images/chat_bg.jpg") center center no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
 }
 
 .chat-aside {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.3);
   border-radius: 12px;
 }
 
@@ -196,7 +196,7 @@ export default {
 .chat-room {
   display: flex;
   flex-direction: column;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.4);
   border-radius: 12px;
   overflow: hidden;
 
@@ -209,13 +209,15 @@ export default {
 
   &__content {
     flex: 1;
+    padding: 0 16px;
     .join-tips {
       position: relative !important;
       display: block;
       width: 100%;
+      padding: 10px;
       left: 0 !important;
       transform: none !important;
-      color: #003cab;
+      color: #fff;
       font-size: 15px;
       text-align: center;
     }
@@ -223,7 +225,7 @@ export default {
       position: relative;
       margin-bottom: 15px;
       text-align: left;
-      color: #46b0ff;
+      color: @primary-color;
       &:after {
         content: "";
         display: block;
@@ -231,10 +233,10 @@ export default {
       }
       .message-date {
         font-size: 16px;
-        color: #b9b8b8;
+        color: rgba(255, 255, 255, 0.5);
       }
       .m-nickname {
-        color: #46b0ff;
+        color: #fff;
       }
       &.user {
         text-align: right;
@@ -243,6 +245,25 @@ export default {
     .message-box {
       line-height: 30px;
       font-size: 20px;
+      margin-top: 6px;
+
+      .right {
+        float: right;
+        margin-left: 6px;
+      }
+      .left {
+        float: left;
+        margin-right: 6px;
+      }
+      .bubble {
+        text-align: left;
+        max-width: 80%;
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.6);
+        border-radius: 6px;
+        padding: 2px 6px;
+        color: #000;
+      }
     }
   }
 

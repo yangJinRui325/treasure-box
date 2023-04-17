@@ -15,7 +15,18 @@ export default {
   data() {
     return {};
   },
-  mounted() {},
+  mounted() {
+    this.$message.info({
+      content: "将左侧图表拖拽至中间，打开右侧进行配置",
+      closeBtn: true,
+      duration: 0,
+      offset: [0, 60],
+      // 层级控制：非当前场景自由控制开关的关键代码，仅用于测试 API 是否运行正常
+      zIndex: 1001,
+      // 挂载元素控制：非当前场景自由控制开关的关键代码，仅用于测试 API 是否运行正常
+      attach: document.body,
+    });
+  },
   methods: {},
   watch: {},
 };
