@@ -48,7 +48,17 @@ export default {
         },
         {
           color: "#BDEFFF",
-          title: "chart拖拽",
+          title: "X6家谱树",
+          message: "自定义族谱树结构",
+          skill: ["antv/X6", "SVG"],
+          icon: "trea-jiapu",
+          handler: () => {
+            this.$router.push("/x6");
+          },
+        },
+        {
+          color: "#c8ffd8",
+          title: "Chart拖拽",
           message: "拖拽图表，自行配置属性",
           skill: ["echart", "draggable"],
           icon: "trea-chart",
@@ -57,13 +67,23 @@ export default {
           },
         },
         {
-          color: "#c8ffd8",
+          color: "#DEBEFD",
           title: "聊天室",
           message: "websocket 在线实时聊天",
           skill: ["node.js", "websocket"],
           icon: "trea-chat",
           handler: () => {
             this.$router.push("/chat");
+          },
+        },
+        {
+          color: "#FAEDC9",
+          title: "SVG图标",
+          message: "自定义绘制svg图像",
+          skill: ["SVG", "CSS"],
+          icon: "trea-svg",
+          handler: () => {
+            this.$router.push("/svg");
           },
         },
       ],

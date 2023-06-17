@@ -35,12 +35,28 @@ const routes = [
         component: () => import("@/views/g6/Index.vue"),
       },
       {
+        path: "x6",
+        name: "Jiapu",
+        meta: {
+          title: "X6家谱",
+        },
+        component: () => import("@/views/x6/Index.vue"),
+      },
+      {
         path: "chat",
         name: "Chat",
         meta: {
           title: "聊天室",
         },
         component: () => import("@/views/chat/Index.vue"),
+      },
+      {
+        path: "svg",
+        name: "Svg",
+        meta: {
+          title: "Svg图标",
+        },
+        component: () => import("@/views/svg/Index.vue"),
       },
     ],
   },
