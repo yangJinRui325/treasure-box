@@ -199,35 +199,49 @@ export default {
       const nodes = this.graphRef.getNodes();
       const edges = this.graphRef.getEdges();
       const g = new dagre.graphlib.Graph();
-      g.setGraph({ rankdir: dir, nodesep: 16, ranksep: 16 });
+      g.setGraph({ rankdir: dir, nodesep: 10, ranksep: 40 });
+      /**
+       * ankdir: 图的布局方向，可以是"TB"（从上到下，默认）、"BT"（从下到上）、"LR"（从左到右）或"RL"（从右到左）。
+       * nodesep: 节点之间的水平间距。
+       * edgesep: 边之间的水平间距。
+       * ranksep: 同一层级节点之间的垂直间距。
+       * marginx: 图的水平边距。
+       * marginy: 图的垂直边距。
+       */
+
       g.setDefaultEdgeLabel(() => ({}));
 
-      const width = 260;
-      const height = 90;
+      //   const width = 260;
+      //   const height = 90;
+      const width = box_width;
+      const height = box_height;
       nodes.forEach((node) => {
         g.setNode(node.id, { width, height });
+        // setNode(id, label)添加一个节点到图中。id是节点的唯一标识符，label是节点的属性对象。
       });
 
       edges.forEach((edge) => {
-        const source = edge.getSource();
-        const target = edge.getTarget();
+        const source = edge.getSource(); // 获取边的起始节点/起始点信息。
+        const target = edge.getTarget(); // 获取边的终止节点/终止点信息。
         g.setEdge(source.cell, target.cell);
+        // setEdge(v, w, label)添加一条边到图中。v是边的起始节点标识符，w是边的结束节点标识符，label是边的属性对象
       });
 
-      dagre.layout(g);
+      dagre.layout(g); // 该函数用于对输入的图进行布局。graph是
 
+      // 获取图中所有节点的标识符。
       g.nodes().forEach((id) => {
-        const node = this.graphRef.getCellById(id);
+        const node = this.graphRef.getCellById(id); // 根据节点/边的 ID 获取节点/边。
         if (node) {
-          const pos = g.node(id);
-          node.position(pos.x, pos.y);
+          const pos = g.node(id); // 获取指定标识符的节点的属性
+          node.position(pos.x, pos.y); // 根据layout算法算的坐标值渲染到X6中
         }
       });
 
       edges.forEach((edge) => {
-        const source = edge.getSourceNode();
-        const target = edge.getTargetNode();
-        const sourceBBox = source.getBBox();
+        const source = edge.getSourceNode(); // 获取边的起始节点，没有连接到节点时返回 null。
+        const target = edge.getTargetNode(); // 获取边的终止节点，没有连接到节点时返回 null。
+        const sourceBBox = source.getBBox(); // getBBox 返回边的包围盒。
         const targetBBox = target.getBBox();
 
         if ((dir === "LR" || dir === "RL") && sourceBBox.y !== targetBBox.y) {
@@ -256,7 +270,7 @@ export default {
             { x: targetBBox.center.x, y },
           ]);
         } else {
-          edge.setVertices([]);
+          edge.setVertices([]); // 如果不设置，此处为锐利的斜线
         }
       });
     },
@@ -267,8 +281,8 @@ export default {
         .get("/getZupuTreeData?rootIndividualId=5146&showNum=5")
         .then((res) => {
           res.forEach((element) => {
-            const { name, sex, diedAt } = element;
-            this.nodes.push(this.createNode(element, name, sex, diedAt));
+            const { name, sex, alive } = element;
+            this.nodes.push(this.createNode(element, name, sex, alive == 0));
           });
           this.nodes.forEach((node) => {
             // const { parents, sex, spouses } = node.data;
