@@ -7,15 +7,10 @@
 <script>
 // 文档地址：https://x6.antv.antgroup.com/tutorial/basic/graph
 import { Graph } from "@antv/x6";
-// import dagre from "dagre";
-import {
-  box_width,
-  box_height,
-  //   verticalMargin,
-  //   horizontalMargin,
-} from "./config";
+import dagre from "dagre";
+import { box_width, box_height } from "./config";
 // 布局方向
-// const dir = "TB"; // LR RL TB BT
+const dir = "TB"; // LR RL TB BT
 export default {
   name: "x6",
   data() {
@@ -23,7 +18,6 @@ export default {
       graphRef: null,
       nodes: [],
       edges: [],
-      boxSize: [0, 0],
     };
   },
   created() {
@@ -32,10 +26,8 @@ export default {
   mounted() {
     // 创建画布
     const box = document.getElementsByClassName("wrapper")[0];
-    const canvasEl = document.getElementById("container");
-    this.boxSize = [box.clientWidth, box.clientHeight];
     this.graphRef = new Graph({
-      container: canvasEl,
+      container: document.getElementById("container"),
       width: box.clientWidth,
       height: box.clientHeight,
       // 背景也可以填充图片
@@ -128,7 +120,7 @@ export default {
                 attrs: {
                   circle: {
                     magnet: true,
-                    r: 1,
+                    r: 4,
                     stroke: "#31d0c6",
                     fill: "#fff",
                     strokeWidth: 1,
@@ -141,7 +133,7 @@ export default {
                 attrs: {
                   circle: {
                     magnet: true,
-                    r: 1,
+                    r: 4,
                     stroke: "#31d0c6",
                     fill: "#fff",
                     strokeWidth: 1,
@@ -235,87 +227,124 @@ export default {
           target: { cell: target.id },
         });
       } else {
+        // return this.graphRef.createEdge({
+        //   shape: type,
+        //   source: { cell: source.id, port: "rightOut" },
+        //   target: { cell: target.id, port: "leftIn" },
+        // });
         return this.graphRef.createEdge({
           shape: type,
-          source: { cell: source.id, port: "rightOut" },
-          target: { cell: target.id, port: "leftIn" },
+          source: { cell: source.id },
+          target: { cell: target.id },
+          router: {
+            name: "er",
+            args: {
+              offset: 24,
+              direction: "L",
+            },
+          },
         });
       }
+      //   return this.graphRef.createEdge({
+      //     shape: type,
+      //     source: { cell: source.id },
+      //     target: { cell: target.id },
+      //   });
     },
 
     // 自动布局
     layout() {
-      /** 算法
-       * 1、层级 可以通过depth
-       * 2、夫妻关系，
-       * 3、计算出当前代数中最多的人员
+      const nodes = this.graphRef.getNodes();
+      const edges = this.graphRef.getEdges();
+      const g = new dagre.graphlib.Graph();
+      g.setGraph({ rankdir: dir, nodesep: 10, ranksep: 40 });
+      g.setGraph({});
+      /**
+       * ankdir: 图的布局方向，可以是"TB"（从上到下，默认）、"BT"（从下到上）、"LR"（从左到右）或"RL"（从右到左）。
+       * nodesep: 节点之间的水平间距。
+       * edgesep: 边之间的水平间距。
+       * ranksep: 同一层级节点之间的垂直间距。
+       * marginx: 图的水平边距。
+       * marginy: 图的垂直边距。
        */
-      //   const nodes = this.graphRef.getNodes();
-      //   const edges = this.graphRef.getEdges();
-      //   console.log(nodes, edges);
-      //   this.handleGenMaxNum(nodes);
-      //   const { gens, gens_total } = this.handleGenMaxNum(nodes);
-      //   const [posX] = this.boxSize;
-      //   const gap_columns = Math.floor(posX / (gens_total + 2));
-      //   console.log(gap_columns);
-      //   nodes.forEach((node) => {
-      //     const { depth, id } = node.data;
-      //     const [len, idx] = this.handleDepthNumber(depth, id);
-      //     const pos_X =
-      //     node.position(pos_X, pos_Y);
-      //   });
-      //   const [posX] = this.boxSize;
-      //   const nodes = this.graphRef.getNodes();
-      //   const edges = this.graphRef.getEdges();
-      //   console.log(nodes, edges);
-      //   nodes.forEach((node) => {
-      //     const { depth, id } = node.data;
-      //     const [len, idx] = this.handleDepthNumber(depth, id);
-      //     const gridX = posX / (len + 1);
-      //     const pos_X = gridX + (gridX + horizontalMargin) * idx - box_width / 2;
-      //     const pos_Y = box_height * depth + verticalMargin;
-      //     console.log(posX, pos_X);
-      //     node.position(pos_X, pos_Y);
-      //     /*
-      //      * boxw = 200
-      //      * box_width = 74
-      //      *
-      //      */
-      //     // console.log(node.position());
-      //     // if (depth == 1) {
-      //     //   node.position(posX / 2, 100);
-      //     // } else if (depth == 2) {
-      //     //   node.position(
-      //     //     posX / 2,
-      //     //     100 + verticalMargin * (depth - 1) + box_height
-      //     //   );
-      //     // }
-      //     // setNode(id, label)添加一个节点到图中。id是节点的唯一标识符，label是节点的属性对象。
-      //   });
-    },
-    // 当前人员是他平辈的第几个
-    handleDepthNumber(depth, id) {
-      const curDepthList = this.nodes.filter(
-        (node) => node.data.depth == depth
-      );
-      const idx = curDepthList.findIndex((node) => node.data.id == id);
-      return [curDepthList.length, idx];
-    },
-    // 计算x代中最多一代的人数
-    handleGenMaxNum(nodes) {
-      let gens = null; //出现次数最多的代数
-      let gens_total = 1; //该元素出现次数
-      nodes.reduce((p, cur) => {
-        //对该数组进行reduce遍历
-        let k = cur.data.depth;
-        p[k] ? p[k]++ : (p[k] = 1); //k代表当前正在遍历的元素。应用到p[k]里，k表示p对象里的一个键，p[k]表示该键对应的值。不懂的话用如下图对象测一下就懂了
-        if (p[k] > gens_total) {
-          gens_total = p[k];
-          gens = k;
+
+      g.setDefaultEdgeLabel(() => ({}));
+
+      //   const width = 260;
+      //   const height = 90;
+      const width = box_width;
+      const height = box_height;
+      nodes.forEach((node) => {
+        const { depth } = node.data;
+        console.log(depth);
+        g.setNode(node.id, { width, height, rank: depth });
+        // setNode(id, label)添加一个节点到图中。id是节点的唯一标识符，label是节点的属性对象。
+      });
+
+      edges.forEach((edge) => {
+        const source = edge.getSource(); // 获取边的起始节点/起始点信息。
+        const target = edge.getTarget(); // 获取边的终止节点/终止点信息。
+        g.setEdge(source.cell, target.cell);
+        // setEdge(v, w, label)添加一条边到图中。v是边的起始节点标识符，w是边的结束节点标识符，label是边的属性对象
+      });
+
+      dagre.layout(g); // 该函数用于对输入的图进行布局。graph是
+
+      // 获取图中所有节点的标识符。
+      g.nodes().forEach((id) => {
+        const node = this.graphRef.getCellById(id); // 根据节点/边的 ID 获取节点/边。
+        if (node) {
+          const pos = g.node(id); // 获取指定标识符的节点的属性
+          node.position(pos.x, pos.y); // 根据layout算法算的坐标值渲染到X6中
         }
-        return p; //最后返回一个对象
-      }, {});
-      return { gens: gens, gens_total: gens_total };
+      });
+      //   edges.forEach((edge) => {
+      //     const source = edge.getSourceNode(); // 获取边的起始节点，没有连接到节点时返回 null。
+      //     const target = edge.getTargetNode(); // 获取边的终止节点，没有连接到节点时返回 null。
+      //     const sourceBBox = source.getBBox(); // getBBox 返回边的包围盒。
+      //     const targetBBox = target.getBBox();
+      //     if ((dir === "LR" || dir === "RL") && sourceBBox.y !== targetBBox.y) {
+      //       const gap =
+      //         dir === "LR"
+      //           ? targetBBox.x - sourceBBox.x - sourceBBox.width
+      //           : -sourceBBox.x + targetBBox.x + targetBBox.width;
+      //       const fix = dir === "LR" ? sourceBBox.width : 0;
+      //       const x = sourceBBox.x + fix + gap / 2;
+      //       edge.setVertices([
+      //         { x, y: sourceBBox.center.y },
+      //         { x, y: targetBBox.center.y },
+      //       ]);
+      //     } else if (
+      //       (dir === "TB" || dir === "BT") &&
+      //       sourceBBox.x !== targetBBox.x
+      //     ) {
+      //       const gap =
+      //         dir === "TB"
+      //           ? targetBBox.y - sourceBBox.y - sourceBBox.height
+      //           : -sourceBBox.y + targetBBox.y + targetBBox.height;
+      //       const fix = dir === "TB" ? sourceBBox.height : 0;
+      //       const y = sourceBBox.y + fix + gap / 2;
+
+      //       edge.setVertices([
+      //         { x: sourceBBox.center.x, y },
+      //         { x: targetBBox.center.x, y },
+      //       ]);
+      //       //   if (edge.shape != "spouse") {
+      //       //     edge.setVertices([
+      //       //       { x: sourceBBox.center.x, y },
+      //       //       { x: targetBBox.center.x, y },
+      //       //     ]);
+      //       //   } else {
+      //       //     // 夫妻
+      //       //     edge.setVertices([
+      //       //       { x, y: sourceBBox.center.y },
+      //       //       { x, y: targetBBox.center.y },
+      //       //     ]);
+      //       //   }
+      //     } else {
+      //       edge.setVertices([]); // 如果不设置，此处为锐利的斜线
+      //     }
+      //   });
     },
 
     //获取家谱数据
@@ -328,20 +357,20 @@ export default {
             this.nodes.push(this.createNode(element, name, sex, alive == 0));
           });
           this.nodes.forEach((node) => {
-            // const { parents, sex, spouses } = node.data;
-            const { parents } = node.data;
+            const { parents, sex, spouses } = node.data;
+            // const { parents } = node.data;
             if (parents.length) {
               const parentId = parents[0];
               const parent = this.nodes.find((v) => v.data.id == parentId);
               const line = this.createEdge(parent, node);
               this.edges.push(line);
             }
-            // if (sex == "f" && spouses.length) {
-            //   const husbandId = spouses[0];
-            //   const husband = this.nodes.find((v) => v.data.id == husbandId);
-            //   const line = this.createEdge(husband, node, "spouse");
-            //   this.edges.push(line);
-            // }
+            if (sex == "f" && spouses.length) {
+              const husbandId = spouses[0];
+              const husband = this.nodes.find((v) => v.data.id == husbandId);
+              const line = this.createEdge(node, husband, "spouse");
+              this.edges.push(line);
+            }
           });
           this.graphRef.resetCells([...this.nodes, ...this.edges]);
           this.layout();
